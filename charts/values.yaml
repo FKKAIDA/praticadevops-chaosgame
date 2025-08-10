@@ -1,0 +1,4 @@
+global:  
+  frontend: front
+  fractal: fractal
+  data: data

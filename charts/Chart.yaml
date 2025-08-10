@@ -1,0 +1,14 @@
+apiVersion: v3
+name: chaosgame-language
+description: Helm Chart
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+dependencies:
+  - name: "frontend"
+    version: "0.1.0"
+  - name: "fractal"
+    version: "0.1.0"
+  - name: "data"
+    version: "0.1.0"

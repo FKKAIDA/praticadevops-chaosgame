@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.data }}
+  labels:
+    app: {{ .Values.global.data }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.data }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.data }}
+    spec:
+      containers:
+        - name: {{ .Values.global.data }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PORT
+            value:  {{ .Values.env.port | quote }}
+          ports:
+            - containerPort: 82
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1"
+            limits:
+              memory: "2Gi"
+              cpu: "2"
+          volumeMounts:
+          - name: {{ .Values.global.data }}-examples
+            mountPath: /app/examples
+          - name: {{ .Values.global.data }}-history
+            mountPath: /app/history
+      volumes:
+        - name: {{ .Values.global.data }}-examples
+          persistentVolumeClaim:
+            claimName: {{ .Values.global.data }}-pvc-examples
+        - name: {{ .Values.global.data }}-history
+          persistentVolumeClaim:
+            claimName: {{ .Values.global.data }}-pvc-history

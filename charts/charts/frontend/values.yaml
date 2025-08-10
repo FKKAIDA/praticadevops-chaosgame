@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: front
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+env:
+  port: "80"
+  fractalport: "81"
+  dataport: "82"

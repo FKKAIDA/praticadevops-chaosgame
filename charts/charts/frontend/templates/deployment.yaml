@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.global.frontend }}
+  labels:
+    app: {{ .Values.global.frontend }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.global.frontend }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.global.frontend }}
+    spec:
+      containers:
+        - name: {{ .Values.global.frontend }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: PORT
+            value:  {{ .Values.env.port | quote }}
+          - name: FRACTAL
+            value:  {{ .Values.global.fractal }}:{{ .Values.env.fractalport }}
+          - name: DATA
+            value:  {{ .Values.global.data }}:{{ .Values.env.dataport }}
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "1"
+            limits:
+              memory: "2Gi"
+              cpu: "2"

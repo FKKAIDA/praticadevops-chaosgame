@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chaos Game Language</title>
+  <link type="image/x-icon" href="./favicon.ico">
+  
+  <style>
+
+
+
+    .container {  /* Targets the div with class "container" */
+      display: flex;
+      justify-content: start; 
+      gap: 50px; 
+    }
+
+    .left{
+      width: auto; /* Adjust width of each div as needed */
+      height: auto;
+    }
+
+ 
+    .right {  /* Targets all img elements */
+      width: 800px;
+      height: 800px;
+    }
+
+    .right img{
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Chaos Game Language</h1>
+  <p><strong>Name:</strong> Fernando Kiyoshi Kaida</p>
+  <p><strong>RA:</strong> 769667</a></p>
+  <p><strong>Github:</strong> <a href="https://github.com/FKKAIDA/praticadevops-chaosgame" target="_blank">https://github.com/FKKAIDA/praticadevops-chaosgame</a></p>
+  
+
+  <div class="container">
+
+
+    <div class="left">
+
+      <form>
+        <label for="examples">Selecione um exemplo pronto:</label>
+        <select id="examples">
+        </select>
+        <button type="button" onclick="loadExample()">Carregar Exemplo</button>
+      </form>
+
+      <form>
+        <label for="history">Ou recupere um do histórico:</label>
+        <select id="history">
+        </select>
+        <button type="button" onclick="loadHistory()">Carregar do Histórico</button>
+      </form>
+      <p>Escreva um código:</p>
+     
+
+      <textarea id="input" name="input" cols="100" rows="30" style="resize: both; overflow: auto;"></textarea><br>
+      <button type="button" onclick="generateFractal()">Gerar Fractal</button>
+      <p id="result"></p>
+    </div>
+    <div class="right">    
+      <img  id="Output">
+    </div>
+  </div>
+
+
+  <script>
+    async function listExamples(){
+      const response = await fetch('/list-examples');
+      const r = await response.json();
+      const examples = document.getElementById("examples");
+      examples.innerHTML = "";
+      for(const elem of r.entrylist){
+        const option = document.createElement("option");
+        option.value = elem;
+        option.textContent = elem;
+        examples.appendChild(option);
+      }
+      loadExample();
+    }
+  </script>
+
+  <script>
+    async function loadExample(){
+      document.getElementById("result").textContent = "Aguarde";
+      const input = document.getElementById("examples").value;
+      const response = await fetch('/load-example', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input })
+      });
+  
+      document.getElementById("input").value = await response.text();
+      document.getElementById("result").textContent = "Exemplo carregado. Gere um Fractal.";
+    }
+  </script>
+
+  <script>
+    async function listHistory(){
+      const response = await fetch('/list-history');
+      const r = await response.json();
+      const examples = document.getElementById("history");
+      examples.innerHTML = "";
+
+      const option = document.createElement("option");
+      option.textContent = "Selecione uma opção";
+      option.disabled = true;
+      option.selected = true;
+      examples.appendChild(option);
+
+      for(const elem of r.entrylist){
+        const option = document.createElement("option");
+        option.value = elem;
+        option.textContent = elem;
+        examples.appendChild(option);
+      }
+    }
+  </script>
+
+  <script>
+    async function loadHistory(){
+      document.getElementById("result").textContent = "Aguarde";
+      const input = document.getElementById("history").value;
+      const response_text = await fetch('/load-text-history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input })
+      });
+  
+      document.getElementById("input").value = await response_text.text();
+
+      const response_image = await fetch('/load-image-history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input })
+      });
+
+      const blob = await response_image.blob();
+      document.getElementById("Output").src = URL.createObjectURL(blob);
+      listHistory();
+      document.getElementById("result").textContent = "Texto e Imagem Carregado do Histórico";
+    }
+  </script>
+
+  <script>
+    async function generateFractal() {
+      document.getElementById("result").textContent = "Aguarde";
+      const input = document.getElementById("input").value;
+      const response = await fetch('/fractal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input })
+      });
+
+      if(response.ok){
+        const blob = await response.blob();
+        document.getElementById("Output").src = URL.createObjectURL(blob);
+        document.getElementById('result').textContent = "Fractal Gerado com Sucesso!";
+        listHistory();
+      }else{
+        const res = await response.text();
+        document.getElementById("result").textContent = res;
+      }
+    }
+  </script>
+
+
+  <script>
+    window.onload = async function () {
+      listExamples();
+      listHistory();
+    };
+  </script>
+</body>
+</html>
+

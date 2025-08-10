@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: data
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  
+env:
+  port: "82"
+ 

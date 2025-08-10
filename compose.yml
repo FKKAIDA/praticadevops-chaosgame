@@ -1,0 +1,48 @@
+services:
+  front:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: frontend
+    environment:
+      - PORT=80
+      - FRACTAL=fractal:81
+      - DATA=data:82
+    networks:
+      - front-fractal
+      - front-data
+    ports:
+      - "80:80"
+    depends_on:
+        - fractal
+        - data
+  fractal:
+    build:
+      context: ./fractal
+      dockerfile: Dockerfile
+    image: fractal
+    environment:
+      - PORT=81
+    networks:
+      - front-fractal
+  data:
+    build:
+      context: ./data
+      dockerfile: Dockerfile
+    image: data
+    environment:
+      - PORT=82
+    networks:
+      - front-data
+    volumes:
+      - ./data/examples:/app/examples
+      - history-data:/app/history
+
+
+networks:
+ front-fractal:
+ front-data:
+
+volumes:
+  history-data:
+ 

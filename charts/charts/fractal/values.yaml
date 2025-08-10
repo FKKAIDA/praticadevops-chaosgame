@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: fractal
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  
+env:
+  port: "81"
+ 
