@@ -1,7 +1,6 @@
 const express = require('express');
 //https://stackoverflow.com/questions/69041454/error-require-of-es-modules-is-not-supported-when-importing-node-fetch
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args)); 
-const path = require('path');
 const cors = require('cors')
 
 const app = express();
