@@ -5,6 +5,7 @@ Aplicação web para gerar fractais utilizando uma linguage
 ## Requisitos
 
 Docker, Docker Compose, minikube e Helm
+Ter a seguinte entrada em /etc/hosts: 192.168.49.2 k8s.local
 
 ## Instalação
 
@@ -13,7 +14,9 @@ Para usar com docker compose, execute na raiz do projeto:
 ```bash
 docker compose up
 ```
-E para interromper os containers, deletar os containers, imagens e volumes:
+E accesse localhost:80
+
+Para interromper os containers, deletar os containers, imagens e volumes:
 
 ```bash
 docker compose down --rmi all -v
@@ -30,6 +33,7 @@ Para executar a aplicação:
 ```bash
 bash ./helm.sh start
 ```
+E acesse k8s.local
 Para interromper a aplicação:
 
 ```bash
